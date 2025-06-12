@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>楚汇苑庭院餐厅 - 包间预订系统</title>
+<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css"  rel="stylesheet">
+<link href="https://s2.ssl.qhres2.com/static/56662140ef7d5d03.css"  rel="stylesheet">
+<style>
+:root {
+  --primary: #8B4513;
+  --secondary: #A0522D;
+  --accent: #CD853F;
+  --light: #FAEBD7;
+  --dark: #5C4033;
+}
+ 
+@font-face {
+  font-family: 'Handwriting';
+  src: url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');  
+}
+ 
+body {
+  background-color: var(--light);
+  font-family: 'Ma Shan Zheng', cursive;
+  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path   d="M20,20 Q30,10 40,20 T60,20 T80,20" stroke="%23A0522D" fill="none" stroke-width="0.5" opacity="0.3"/></svg>');
+}
+ 
+.hand-drawn {
+  position: relative;
+}
+ 
+.hand-drawn::after {
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="10" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg"><path   d="M0,5 Q10,0 20,5 T40,5 T60,5 T80,5 T100,5" stroke="%235C4033" fill="none" stroke-width="1"/></svg>');
+  background-size: 100% 100%;
+  opacity: 0.3;
+}
+ 
+.sketch-border {
+  border: 2px solid var(--dark);
+  border-radius: 15px;
+  position: relative;
+  background: white;
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+}
+ 
+.sketch-border::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 1px dashed var(--accent);
+  border-radius: 18px;
+  pointer-events: none;
+}
+ 
+.watercolor-bg {
+  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path   d="M0,0 Q50,20 100,0 L100,100 Q50,80 0,100 Z" fill="%23FAEBD7"/></svg>');
+  background-size: cover;
+}
+ 
+.menu-item {
+  transition: all 0.3s ease;
+  transform-origin: left center;
+}
+ 
+.menu-item:hover {
+  transform: scale(1.02);
+}
+ 
+.booked {
+  background-color: #FFE4E1;
+}
+ 
+.available {
+  background-color: #F0FFF0;
+}
+ 
+.pending {
+  background-color: #FFF8DC;
+}
+ 
+.ink-effect {
+  position: relative;
+}
+ 
+.ink-effect::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--dark), transparent);
+  opacity: 0.5;
+}
+ 
+/* 新增样式 - 提交部分优化 */
+.submit-section {
+  background-color: rgba(255, 253, 245, 0.8);
+  border-top: 2px dashed var(--accent);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  border-radius: 0 0 12px 12px;
+}
+ 
+.total-price-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: var(--light);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+ 
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+ 
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+ 
+.submit-button:active {
+  transform: translateY(0);
+}
+ 
+.submit-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+ 
+.submit-button:hover::before {
+  left: 100%;
+}
+ 
+.price-highlight {
+  font-size: 1.25rem;
+  color: var(--primary);
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+ 
+/* 新增多选下拉菜单样式 */
+.multi-select-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+ 
+.multi-select-button {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background-color: white;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ 
+.multi-select-button:hover {
+  border-color: var(--primary);
+}
+ 
+.multi-select-dropdown {
+  position: absolute;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+  display: none;
+/* 修改这里，默认向上弹出 */
+    bottom: 100%;
+    margin-bottom: 5px;
+}
+ 
+.multi-select-dropdown.show  {
+  display: block;
+}
+ 
+.multi-select-search {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+/* 添加边框圆角，使其与菜单方向一致 */
+    border-radius: 6px 6px 0 0;
+}
+ 
+.multi-select-search input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+ 
+.multi-select-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.1rem;
+  padding: 0.1rem;
+/* 添加边框圆角，使其与菜单方向一致 */
+    border-radius: 0 0 4px 4px;
+}
+ 
+.multi-select-option {
+  padding: 0.1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+ 
+.multi-select-option:hover {
+  background-color: var(--light);
+}
+ 
+.multi-select-option input {
+  margin-right: 0.15rem;
+}
+ 
+.multi-select-selections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  margin-top: 0.15rem;
+}
+ 
+.multi-select-tag {
+  background-color: var(--light);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+}
+ 
+.multi-select-tag button {
+  margin-left: 0.25rem;
+  background: none;
+  border: none;
+  color: var(--dark);
+  cursor: pointer;
+}
+ 
+/* 表单布局调整 */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+ 
+.form-group {
+  margin-bottom: 1rem;
+}
+ 
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+ 
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background-color: white;
+}
+ 
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  min-height: 80px;
+  resize: vertical;
+}
+</style>
+</head>
+<body class="min-h-screen p-4">
+<div class="text-center mb-8 relative">
+  <!-- 标题区域 -->
+  <div class="text-center mb-8 relative">
+    <h1 class="text-5xl font-bold text-amber-900 mb-2 hand-drawn">楚汇苑庭院餐厅</h1>
+    <p class="text-xl text-amber-800 italic">Chu Hui Yuan Courtyard Restaurant</p>
+    <div class="absolute top-0 right-0 text-sm text-amber-700">
+      <span id="current-date" class="font-mono"></span>
+    </div>
+  </div>
+ 
+  <!-- 主内容区 -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- 左侧 - 日历视图 -->
+    <div class="lg:col-span-2">
+      <div class="sketch-border p-6 watercolor-bg">
+        <h2 class="text-2xl font-bold text-amber-900 mb-4 ink-effect">包间预订日历</h2>
+ 
+        <div class="flex justify-between items-center mb-4">
+          <button id="prev-month" class="px-3 py-1 bg-amber-100 rounded-full text-amber-900 hover:bg-amber-200 transition">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h3 id="current-month" class="text-xl font-semibold text-amber-900"></h3>
+          <button id="next-month" class="px-3 py-1 bg-amber-100 rounded-full text-amber-900 hover:bg-amber-200 transition">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+ 
+        <div class="grid grid-cols-7 gap-1 mb-2">
+          <div class="text-center font-semibold text-amber-900">日</div>
+          <div class="text-center font-semibold text-amber-900">一</div>
+          <div class="text-center font-semibold text-amber-900">二</div>
+          <div class="text-center font-semibold text-amber-900">三</div>
+          <div class="text-center font-semibold text-amber-900">四</div>
+          <div class="text-center font-semibold text-amber-900">五</div>
+          <div class="text-center font-semibold text-amber-900">六</div>
+        </div>
+ 
+        <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
+      </div>
+ 
+      <!-- 包间状态概览 -->
+      <div class="sketch-border p-6 mt-6 watercolor-bg">
+        <h2 class="text-2xl font-bold text-amber-900 mb-4 ink-effect">今日包间状态</h2>
+        <div id="room-status" class="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <!-- 动态生成包间状态 -->
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 右侧 - 预订表单 -->
+    <div class="lg:col-span-1">
+      <div class="sketch-border p-6 watercolor-bg sticky top-4">
+        <h2 class="text-2xl font-bold text-amber-900 mb-4 ink-effect">新建预订</h2>
+ 
+        <form id="booking-form" class="space-y-4">
+          <div>
+            <label for="booking-date" class="block text-sm font-medium text-amber-900 mb-1">预订日期</label>
+            <input type="date" id="booking-date" class="w-full p-2 border border-amber-300 rounded focus:ring-2 focus:ring-amber-500">
+          </div>
+ 
+          <div class="form-row">
+            <div class="form-group">
+              <label for="time-slot">用餐时段</label>
+              <select id="time-slot">
+                <option value="lunch">中餐 (11:00-14:00)</option>
+                <option value="dinner">晚餐 (17:00-21:00)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="room-select">选择包间</label>
+              <select id="room-select">
+                <option value="楚韵">楚韵</option>
+                <option value="楚风">楚风</option>
+                <option value="楚辞">楚辞</option>
+                <option value="楚味">楚味</option>
+                <option value="楚怀">楚怀</option>
+                <option value="楚尚">楚尚</option>
+                <option value="楚轩">楚轩</option>
+                <option value="圆卡1">圆卡1</option>
+                <option value="圆卡2">圆卡2</option>
+                <option value="大厅">大厅</option>
+              </select>
+            </div>
+          </div>
+ 
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customer-name">客户姓名</label>
+              <input type="text" id="customer-name">
+            </div>
+            <div class="form-group">
+              <label for="customer-phone">联系电话</label>
+              <input type="tel" id="customer-phone">
+            </div>
+          </div>
+ 
+          <div class="form-group">
+            <label for="customer-note">备注</label>
+            <textarea id="customer-note" placeholder="请输入特殊要求或其他备注信息"></textarea>
+          </div>
+ 
+          <div class="form-group">
+            <label>预订菜单</label>
+            <div class="multi-select-container">
+              <button type="button" class="multi-select-button" id="multi-select-toggle">
+                <span>选择菜品 (可多选)</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="multi-select-dropdown" id="multi-select-dropdown">
+                <div class="multi-select-search">
+                  <input type="text" placeholder="搜索菜品..." id="menu-search">
+                </div>
+                <div class="multi-select-options" id="menu-options">
+                  <!-- 动态生成菜单选项 -->
+                </div>
+              </div>
+              <div class="multi-select-selections" id="selected-items">
+                <!-- 动态生成已选菜品 -->
+              </div>
+            </div>
+          </div>
+ 
+          <!-- 修改后的提交部分 -->
+          <div class="submit-section">
+            <div class="total-price-container">
+              <span class="text-sm font-medium text-amber-900">总计: </span>
+              <span id="total-price" class="price-highlight">¥0</span>
+            </div>
+ 
+            <button type="submit" class="submit-button">
+              <i class="fas fa-paper-plane mr-2"></i>提交预订 
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- 预订详情模态框 -->
+  <div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+    <div class="sketch-border bg-white p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="modal-title" class="text-xl font-bold text-amber-900"></h3>
+        <button id="close-modal" class="text-amber-900 hover:text-amber-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+ 
+      <div id="modal-content" class="space-y-4">
+        <!-- 动态生成预订详情 -->
+      </div>
+ 
+      <div class="pt-4 flex justify-end space-x-3">
+        <button id="edit-booking" class="px-4 py-2 bg-amber-100 text-amber-900 rounded hover:bg-amber-200 transition">
+          <i class="fas fa-edit mr-1"></i> 修改 
+        </button>
+        <button id="cancel-booking" class="px-4 py-2 bg-red-100 text-red-900 rounded hover:bg-red-200 transition">
+          <i class="fas fa-times mr-1"></i> 取消预订 
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<script>
+document.addEventListener('DOMContentLoaded',  function() {
+  // 初始化数据 
+  const rooms = ['楚韵', '楚风', '楚辞', '楚味', '楚怀', '楚尚', '楚轩', '圆卡1', '圆卡2', '大厅'];
+  const menuItems = [
+    { name: '生态水库胖头鱼火锅5.5斤/份', price: 209 },
+    { name: '招牌手撕鲫鱼', price: 48 },
+    { name: '鲜鲍养生粥底火锅', price: 128 },
+    { name: '花椒排骨炖金瓜火锅', price: 138 },
+    { name: '藤椒牛肉火锅', price: 117 },
+    { name: '水煮牛肉', price: 78 },
+    { name: '中华鲟打边炉火锅', price: 88 },
+    { name: '松滋山泉土鸡（母）', price: 198 },
+    { name: '松滋山泉土鸡（公）', price: 258 },
+    { name: '手工时蔬丸子火锅', price: 78 },
+    { name: '砂锅鸡汁春笋尖', price: 78 },
+    { name: '秘制黄牛肉火锅', price: 158 },
+    { name: '蒜蓉焖锅虾', price: 128 },
+    { name: '秘制黄牛排火锅', price: 168 },
+    { name: '干葱富贵虾', price: 118 },
+    { name: '五彩虾仁', price: 78 },
+    { name: '荆沙财鱼火锅', price: 88 },
+    { name: '砂锅肥肠', price: 88 },
+    { name: '金汤五谷虾滑火锅', price: 138 },
+    { name: '干锅跳跳蛙', price: 68 },
+    { name: '荆沙大塘甲鱼火锅', price: 298 },
+    { name: '干锅鹿茸菇', price: 55 },
+    { name: '牛蛙爱上虾火锅', price: 138 },
+    { name: '洪湖土麻鸭火锅', price: 168 },
+    { name: '鸽子排骨烧鲍鱼', price: 288 },
+    { name: '干锅时蔬', price: 28 },
+    { name: '乌龟王八蛋火锅', price: 98 },
+    { name: '江湖肥肠鱼火锅', price: 118 },
+    { name: '滋补土鸽靓汤', price: 69 },
+    { name: '八秒生鱼片', price: 188 },
+    { name: '农家鳝鱼火锅', price: 188 },
+    { name: '田鸡烧土鸽火锅', price: 188 },
+    { name: '砂锅有机黑豆腐', price: 48 },
+    { name: '金汤鲜鲍鳝鱼火锅', price: 2888 },
+    { name: '汽锅银鳕鱼', price: 88 },
+    { name: '湘香鱼尾', price: 58 },
+    { name: '下酒神器', price: 78 },
+    { name: '农家炕藕饼', price: 39 },
+    { name: '樟树港辣椒炒鹿茸菇', price: 48 },
+    { name: '明炉西红柿鱼丸', price: 78 },
+    { name: '糖醋里脊肉', price: 48 },
+    { name: '糖醋熏鱼', price: 48 },
+    { name: '葱爆猪肝', price: 28 },
+    { name: '花仁拌鱼皮', price: 28 },
+    { name: '大碗冬瓜', price: 28 },
+    { name: '酸菜炒苦瓜', price: 32 },
+    { name: '风生水起海蜇头', price: 68 },
+    { name: '香煎白茄子', price: 38 },
+    { name: '清炒藕占', price: 38 },
+    { name: '炒三丁', price: 32 },
+    { name: '油炸花生米', price: 18 },
+    { name: '凉拌黄瓜', price: 22 },
+    { name: '五谷丰登', price: 39 },
+    { name: '汽锅粉蒸肉', price: 49 },
+    { name: '蟹黄干捞粉丝', price: 38 },
+    { name: '郝斜酱油面', price: 28 },
+    { name: '火烧馍', price: 25 },
+    { name: '美点双辉', price: 38 },
+    { name: '小葱牛肉煎包', price: 35 },
+    { name: '荆沙手工鱼糕', price: 59 },
+    { name: '三鲜煎饺', price: 28 },
+    { name: '酱油炒饭', price: 25 },
+    { name: '青椒肉丝', price: 28 },
+    { name: '小炒黄牛肉', price: 68 },
+    { name: '回锅肉', price: 35 },
+    { name: '蒜蓉粉丝娃娃菜', price: 38 },
+    { name: '美鸡鸭五件', price: 68 },
+    { name: '夹馍扣肉', price: 58 },
+    { name: '蒸土鸡蛋', price: 18 },
+    { name: '手工糖水粑粑', price: 32 },
+    { name: '荆州掼蛋', price: 6 },
+    { name: '虾仁蒸蛋', price: 48 },
+    { name: '时蔬沙拉卷', price: 39 },
+    { name: '擂椒拌皮蛋', price: 32 },
+    { name: '卤水大拼盘', price: 88 },
+    { name: '风味武昌鱼', price: 66 },
+    { name: '揽菜窝窝头', price: 35 },
+    { name: '黑糯珍珠丸子', price: 38 },
+    { name: '五行养生双脆', price: 38 },
+    { name: '脆皮奶油', price: 38 },
+    { name: '糯米香糕', price: 35 },
+    { name: '梅干菜饼', price: 38 },
+    { name: '清汤面', price: 18 }
+  ];
+ 
+  let bookings = JSON.parse(localStorage.getItem('bookings'))  || [];
+  let selectedDate = new Date();
+  let selectedBooking = null;
+  let totalPrice = 0;
+  let selectedMenuItems = [];
+ 
+  // 设置当前日期 
+  const currentDateElement = document.getElementById('current-date');  
+  const now = new Date();
+  currentDateElement.textContent  = `${now.getFullYear()} 年${now.getMonth()  + 1}月${now.getDate()} 日`;
+ 
+  // 初始化菜单选择器 
+  function initMenuSelector() {
+    const menuOptionsContainer = document.getElementById('menu-options');  
+    menuOptionsContainer.innerHTML  = '';
+    
+    menuItems.forEach(item  => {
+      const option = document.createElement('div');  
+      option.className  = 'multi-select-option';
+      
+      const checkbox = document.createElement('input');  
+      checkbox.type  = 'checkbox';
+      checkbox.id  = `menu-${item.name.replace(/\s+/g,  '-')}`;
+      checkbox.value  = item.name;  
+      checkbox.dataset.price  = item.price;  
+      
+      const label = document.createElement('label');  
+      label.htmlFor  = checkbox.id;  
+      label.textContent  = `${item.name}  ¥${item.price}`;  
+      
+      option.appendChild(checkbox);  
+      option.appendChild(label);  
+      menuOptionsContainer.appendChild(option);  
+      
+      // 添加事件监听 
+      checkbox.addEventListener('change',  function() {
+        if (this.checked)  {
+          selectedMenuItems.push({name:  item.name,  price: item.price});  
+        } else {
+          selectedMenuItems = selectedMenuItems.filter(i  => i.name  !== item.name);  
+        }
+        updateSelectedItems();
+        calculateTotalPrice();
+      });
+    });
+    
+    // 搜索功能 
+    document.getElementById('menu-search').addEventListener('input',  function(e) {
+      const searchTerm = e.target.value.toLowerCase();  
+      const options = menuOptionsContainer.querySelectorAll('.multi-select-option');  
+      
+      options.forEach(option  => {
+        const text = option.textContent.toLowerCase();  
+        if (text.includes(searchTerm))  {
+          option.style.display  = 'flex';
+        } else {
+          option.style.display  = 'none';
+        }
+      });
+    });
+    
+    // 切换下拉菜单 - 修改这部分代码
+document.getElementById('multi-select-toggle').addEventListener('click', function() {
+    const dropdown = document.getElementById('multi-select-dropdown');
+    
+    // 移除之前的方向类
+    dropdown.classList.remove('up', 'down');
+    
+    // 总是添加up类，使其向上弹出
+    dropdown.classList.add('up');
+    
+    // 切换显示状态
+    dropdown.classList.toggle('show');
+});
+    
+    // 点击外部关闭下拉 
+    document.addEventListener('click',  function(e) {
+      if (!e.target.closest('.multi-select-container'))  {
+        document.getElementById('multi-select-dropdown').classList.remove('show');  
+      }
+    });
+  }
+  
+  // 更新已选菜品显示 
+  function updateSelectedItems() {
+    const container = document.getElementById('selected-items');  
+    container.innerHTML  = '';
+    
+    selectedMenuItems.forEach(item  => {
+      const tag = document.createElement('div');  
+      tag.className  = 'multi-select-tag';
+      tag.textContent  = `${item.name}  ¥${item.price}`;  
+      
+      const removeBtn = document.createElement('button');  
+      removeBtn.innerHTML  = '<i class="fas fa-times"></i>';
+      removeBtn.addEventListener('click',  function() {
+        selectedMenuItems = selectedMenuItems.filter(i  => i.name  !== item.name);  
+        updateSelectedItems();
+        calculateTotalPrice();
+        
+        // 取消对应的复选框选中状态 
+        const checkbox = document.querySelector(`#menu-${item.name.replace(/\s+/g,  '-')}`);
+        if (checkbox) checkbox.checked  = false;
+      });
+      
+      tag.appendChild(removeBtn);  
+      container.appendChild(tag);  
+    });
+  }
+  
+  // 计算总价 
+  function calculateTotalPrice() {
+    totalPrice = selectedMenuItems.reduce((sum,  item) => sum + item.price,  0);
+    document.getElementById('total-price').textContent  = `¥${totalPrice}`;
+  }
+ 
+  // 初始化日历 
+  function initCalendar() {
+    const currentMonthElement = document.getElementById('current-month');  
+    const calendarDaysElement = document.getElementById('calendar-days');  
+ 
+    const year = selectedDate.getFullYear();  
+    const month = selectedDate.getMonth();  
+ 
+    currentMonthElement.textContent  = `${year}年${month + 1}月`;
+ 
+    // 获取当月第一天和最后一天 
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+ 
+    // 获取第一天是星期几 
+    const firstDayOfWeek = firstDay.getDay();  
+ 
+    // 清空日历 
+    calendarDaysElement.innerHTML  = '';
+ 
+    // 添加空白格子 
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const emptyDay = document.createElement('div');  
+      emptyDay.className  = 'h-12';
+      calendarDaysElement.appendChild(emptyDay);  
+    }
+ 
+    // 添加日期格子 
+    for (let day = 1; day <= lastDay.getDate();  day++) {
+      const dayElement = document.createElement('div');  
+      dayElement.className  = 'h-12 flex flex-col items-center justify-center cursor-pointer hover:bg-amber-50 transition rounded';
+ 
+      const dayNumber = document.createElement('span');  
+      dayNumber.className  = 'text-sm font-medium';
+      dayNumber.textContent  = day;
+      dayElement.appendChild(dayNumber);  
+ 
+      // 检查当天是否有预订 
+      const currentDay = new Date(year, month, day);
+      const dayBookings = bookings.filter(booking  => {
+        const bookingDate = new Date(booking.date);  
+        return bookingDate.toDateString()  === currentDay.toDateString();  
+      });
+ 
+      if (dayBookings.length  > 0) {
+        const bookingDot = document.createElement('div');  
+        bookingDot.className  = 'w-2 h-2 rounded-full bg-amber-600 mt-1';
+        dayElement.appendChild(bookingDot);  
+      }
+ 
+      // 高亮当前选中日期 
+      if (day === selectedDate.getDate()  && month === selectedDate.getMonth()  && year === selectedDate.getFullYear())  {
+        dayElement.classList.add('bg-amber-200');  
+      }
+ 
+      // 点击日期事件 
+      dayElement.addEventListener('click',  () => {
+        selectedDate = new Date(year, month, day);
+        initCalendar();
+        updateBookingForm();
+      });
+ 
+      calendarDaysElement.appendChild(dayElement);  
+    }
+  }
+ 
+  // 更新预订表单 
+  function updateBookingForm() {
+    const bookingDateElement = document.getElementById('booking-date');  
+    const year = selectedDate.getFullYear();  
+    const month = (selectedDate.getMonth()  + 1).toString().padStart(2, '0');
+    const day = selectedDate.getDate().toString().padStart(2,  '0');
+    bookingDateElement.value  = `${year}-${month}-${day}`;
+ 
+    updateRoomStatus();
+  }
+ 
+  // 更新包间状态 
+  function updateRoomStatus() {
+    const roomStatusElement = document.getElementById('room-status');  
+    roomStatusElement.innerHTML  = '';
+ 
+    const year = selectedDate.getFullYear();  
+    const month = selectedDate.getMonth();  
+    const day = selectedDate.getDate();  
+ 
+    rooms.forEach(room  => {
+      const roomElement = document.createElement('div');  
+      roomElement.className  = 'p-3 rounded-lg text-center sketch-border';
+ 
+      const roomName = document.createElement('div');  
+      roomName.className  = 'font-bold text-amber-900 mb-1';
+      roomName.textContent  = room;
+      roomElement.appendChild(roomName);  
+ 
+      // 检查包间预订状态 
+      const lunchBooking = bookings.find(booking  => {
+        const bookingDate = new Date(booking.date);  
+        return booking.room  === room &&
+          booking.time === 'lunch' &&
+          bookingDate.getFullYear()  === year &&
+          bookingDate.getMonth()  === month &&
+          bookingDate.getDate()  === day;
+      });
+ 
+      const dinnerBooking = bookings.find(booking  => {
+        const bookingDate = new Date(booking.date);  
+        return booking.room  === room &&
+          booking.time  === 'dinner' &&
+          bookingDate.getFullYear()  === year &&
+          bookingDate.getMonth()  === month &&
+          bookingDate.getDate()  === day;
+      });
+ 
+      const lunchStatus = document.createElement('div');  
+      lunchStatus.className  = 'text-sm mb-1';
+      lunchStatus.textContent  = '中餐: ' + (lunchBooking ? '已预订' : '可预订');
+      lunchStatus.classList.add(lunchBooking  ? 'text-red-600' : 'text-green-600');
+      roomElement.appendChild(lunchStatus);  
+ 
+      const dinnerStatus = document.createElement('div');  
+      dinnerStatus.className  = 'text-sm';
+      dinnerStatus.textContent  = '晚餐: ' + (dinnerBooking ? '已预订' : '可预订');
+      dinnerStatus.classList.add(dinnerBooking  ? 'text-red-600' : 'text-green-600');
+      roomElement.appendChild(dinnerStatus);  
+ 
+      if (lunchBooking || dinnerBooking) {
+        roomElement.classList.add('booked');  
+      } else {
+        roomElement.classList.add('available');  
+      }
+ 
+      // 点击查看详情 
+      roomElement.addEventListener('click',  () => {
+        const bookingsForRoom = bookings.filter(booking  => {
+          const bookingDate = new Date(booking.date);  
+          return booking.room  === room &&
+            bookingDate.getFullYear()  === year &&
+            bookingDate.getMonth()  === month &&
+            bookingDate.getDate()  === day;
+        });
+ 
+        if (bookingsForRoom.length  > 0) {
+          showBookingDetails(bookingsForRoom[0]);
+        }
+      });
+ 
+      roomStatusElement.appendChild(roomElement);  
+    });
+  }
+ 
+  // 显示预订详情 
+  function showBookingDetails(booking) {
+    selectedBooking = booking;
+ 
+    const modal = document.getElementById('booking-modal');  
+    const modalTitle = document.getElementById('modal-title');  
+    const modalContent = document.getElementById('modal-content');  
+ 
+    const bookingDate = new Date(booking.date);  
+    const year = bookingDate.getFullYear();  
+    const month = (bookingDate.getMonth()  + 1).toString().padStart(2, '0');
+    const day = bookingDate.getDate().toString().padStart(2,  '0');
+ 
+    modalTitle.textContent  = `${booking.room}  - ${year}年${month}月${day}日 ${booking.time  === 'lunch' ? '中餐' : '晚餐'}`;
+ 
+    modalContent.innerHTML  = `
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <h4 class="font-semibold text-amber-900">客户信息</h4>
+          <p>姓名: ${booking.customerName}</p>  
+          <p>电话: ${booking.customerPhone}</p>  
+          ${booking.note  ? `<p>备注: ${booking.note}</p>`  : ''}
+        </div>
+        <div>
+          <h4 class="font-semibold text-amber-900">预订详情</h4>
+          <p>包间: ${booking.room}</p>  
+          <p>时段: ${booking.time  === 'lunch' ? '中餐 (11:00-14:00)' : '晚餐 (17:00-21:00)'}</p>
+        </div>
+      </div>
+ 
+      <div>
+        <h4 class="font-semibold text-amber-900">预订菜单</h4>
+        ${booking.menuItems.length  > 0 ?
+          booking.menuItems.map(item  => `
+            <div class="flex justify-between py-1 border-b border-amber-100">
+              <span>${item.name}</span>  
+              <span>¥${item.price}</span>  
+            </div>
+          `).join('') :
+          '<p class="text-gray-500">无菜单信息</p>'
+        }
+      </div>
+ 
+      <div class="flex justify-between pt-2 border-t border-amber-200">
+        <span class="font-semibold">总计:</span>
+        <span class="font-bold">¥${booking.totalPrice}</span>  
+      </div>
+    `;
+ 
+    modal.classList.remove('hidden');  
+  }
+ 
+  // 事件监听 
+  document.getElementById('prev-month').addEventListener('click',  () => {
+    selectedDate.setMonth(selectedDate.getMonth()  - 1);
+    initCalendar();
+  });
+ 
+  document.getElementById('next-month').addEventListener('click',  () => {
+    selectedDate.setMonth(selectedDate.getMonth()  + 1);
+    initCalendar();
+  });
+ 
+  document.getElementById('booking-form').addEventListener('submit',  (e) => {
+    e.preventDefault();  
+ 
+    const bookingDate = document.getElementById('booking-date').value;  
+    const time = document.getElementById('time-slot').value;  
+    const room = document.getElementById('room-select').value;  
+    const customerName = document.getElementById('customer-name').value;  
+    const customerPhone = document.getElementById('customer-phone').value;  
+    const note = document.getElementById('customer-note').value;  
+ 
+    // 创建新预订 
+    const newBooking = {
+      id: Date.now(),  
+      date: bookingDate,
+      time,
+      room,
+      customerName,
+      customerPhone,
+      note,
+      menuItems: selectedMenuItems,
+      totalPrice,
+      createdAt: new Date().toISOString()
+    };
+ 
+    bookings.push(newBooking);  
+    localStorage.setItem('bookings',  JSON.stringify(bookings));  
+ 
+    // 重置表单 
+    document.getElementById('customer-name').value  = '';
+    document.getElementById('customer-phone').value  = '';
+    document.getElementById('customer-note').value  = '';
+    selectedMenuItems = [];
+    document.getElementById('selected-items').innerHTML  = '';
+    totalPrice = 0;
+    calculateTotalPrice();
+ 
+    // 更新UI 
+    initCalendar();
+    updateRoomStatus();
+ 
+    alert('预订成功!');
+  });
+ 
+  document.getElementById('close-modal').addEventListener('click',  () => {
+    document.getElementById('booking-modal').classList.add('hidden');  
+  });
+ 
+  document.getElementById('edit-booking').addEventListener('click',  () => {
+    if (selectedBooking) {
+      // 填充表单 
+      document.getElementById('booking-date').value  = selectedBooking.date;  
+      document.getElementById('time-slot').value  = selectedBooking.time;  
+      document.getElementById('room-select').value  = selectedBooking.room;  
+      document.getElementById('customer-name').value  = selectedBooking.customerName;  
+      document.getElementById('customer-phone').value  = selectedBooking.customerPhone;  
+      document.getElementById('customer-note').value  = selectedBooking.note  || '';
+ 
+      // 填充菜单 
+      selectedMenuItems = [...selectedBooking.menuItems];  
+      updateSelectedItems();
+      calculateTotalPrice();
+ 
+      // 删除原预订 
+      bookings = bookings.filter(b  => b.id  !== selectedBooking.id);  
+      localStorage.setItem('bookings',  JSON.stringify(bookings));  
+ 
+      // 关闭模态框 
+      document.getElementById('booking-modal').classList.add('hidden');  
+     // 添加这一行来更新包间状态
+      updateRoomStatus();
+      // 更新UI 
+      initCalendar();
+      updateRoomStatus();
+    }
+  });
+ 
+  document.getElementById('cancel-booking').addEventListener('click',  () => {
+    if (selectedBooking && confirm('确定要取消此预订吗?')) {
+      bookings = bookings.filter(b  => b.id  !== selectedBooking.id);  
+      localStorage.setItem('bookings',  JSON.stringify(bookings));  
+ 
+      document.getElementById('booking-modal').classList.add('hidden');  
+ 
+      // 立即更新UI状态 
+      initCalendar();
+      updateRoomStatus();
+      
+      // 添加取消成功提示 
+      alert('预订已取消');
+    }
+  });
+ 
+  // 初始化 
+  initCalendar();
+  updateBookingForm();
+  initMenuSelector();
+});
+</script>
+</body>
+</html>
